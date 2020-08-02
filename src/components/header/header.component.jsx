@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { ReactComponent as Logo } from '../../assets/crown.svg'
 import { connect } from 'react-redux'
-import { auth } from '../../firebase/firebase.util'
 import { createStructuredSelector } from 'reselect'
 import './header.styles.scss'
 import CartIcon from '../Shop-icon/shop-icon.component'
@@ -51,5 +50,3 @@ const mapDispatchToProps = dispatch =>({
     signOutStart: () => dispatch(signOutStart())
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Header)
-
-// () => auth.signOut() 
