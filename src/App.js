@@ -6,12 +6,12 @@ import Header from './components/header/header.component'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import {createStructuredSelector} from 'reselect'
-import { auth, createUserProfileDocument } from './firebase/firebase.util'
+// import { auth, createUserProfileDocument } from './firebase/firebase.util'
 import './App.css'
-import { setCurrentUser } from './redux/user/user.action';
 import SigninSignout from './pages/signin-signup/signin-signup.component';
 import { selectCurrentUser } from './redux/user/user.selector';
 import checkOut from './pages/checkout/checkout.component';
+import { checkUserSession } from './redux/user/user.action';
 // import { selectCollectionsForPreview } from './redux/shop/shop.selector';
 
 
@@ -20,24 +20,11 @@ class App extends React.Component {
   unSubscribeFromAuth = null
 
   componentDidMount() {
-    const { setCurrentUser } = this.props
-    this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      if (userAuth) {
-        const userRef = createUserProfileDocument(userAuth)
-          ; (await userRef).onSnapshot(snapShot => {
-            setCurrentUser({
-              id: snapShot.id,
-              ...snapShot.data()
-            })
-          })
-      }
-      setCurrentUser(userAuth)
-      // addCollectionAndDocuments('collection',collectionArray.map(({title, items}) => ({title,items})))
-    })
-
+    const {checkUserSession}= this.props
+    checkUserSession()
   }
   componentWillUnmount() {
-    this.unSubscribeFromAuth()
+   this.unSubscribeFromAuth()
   }
 
   render() {
@@ -63,6 +50,6 @@ const MapStateToProps = createStructuredSelector({
   // collectionArray: selectCollectionsForPreview
 })
 const MapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  checkUserSession: () =>dispatch(checkUserSession())
 })
-export default connect(MapStateToProps, MapDispatchToProps)(App);
+export default connect(MapStateToProps,MapDispatchToProps)(App);
